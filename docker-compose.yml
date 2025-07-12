@@ -34,14 +34,15 @@ services:
       context: ./client
     ports:
       - "3000:3000"
-    # restart: always
     environment:
-        BACKEND_HOST: http://backend-container
+        BACKEND_HOST: http://backend-container:5000
         NODE_OPTIONS: --openssl-legacy-provider
     depends_on:
         - backend-container
     networks:
         - ecommerce-network
+    stdin_open: true    
+    tty: true     
 
 
 networks:
