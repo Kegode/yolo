@@ -31,5 +31,6 @@
 
 ## 8️⃣ DockerHub Image
 
-![Screenshot](images/dockerhub-screenshot.png)
+![Screenshot](frontend.png)
+![Screenshot](backend.png)
 
