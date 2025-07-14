@@ -1,9 +1,9 @@
 
 
  ## 1. Selection of the foundation image against which a given container may be built.
-- Frontend: applied `node:18-alpine` due to it being  lightweight and secure.
--Backend: The node:18-alpine was the choice since it is the latest LTS-based lightweight and secure image.
-- MongoDB:`mongo:6.0` image is stable as it already exists in docker hub.
+Frontend: applied `node:18-alpine` due to it being  lightweight and secure.
+Backend: The node:18-alpine was the choice since it is the latest LTS-based lightweight and secure image.
+MongoDB:`mongo:6.0` image is stable as it already exists in docker hub.
 
  ## 2. Dockerfile commands that were used to create and run every container.
 
