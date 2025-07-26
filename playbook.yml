@@ -1,2 +1,6 @@
 - hosts: all
   become: true
+  roles:
+      - database
+      - backend
+      - client
