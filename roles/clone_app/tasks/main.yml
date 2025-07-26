@@ -4,5 +4,5 @@
   git:
     repo: https://github.com/Kegode/yolo.git 
     dest: /home/vagrant/yolo
-    version: main
+    version: master
     force: yes
