@@ -2,4 +2,5 @@
   become: true
   roles:
     - install_docker
-    
+    - clone_app
+    - run_app
