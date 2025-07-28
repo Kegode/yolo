@@ -1,5 +1,5 @@
 ---
-# tasks file for clone_app
+
 - name: Clone project repository
   git:
     repo: https://github.com/Kegode/yolo.git 

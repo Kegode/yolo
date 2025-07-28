@@ -1,5 +1,5 @@
 ---
-# tasks file for run_app
+
 - name: Build and run the app with Docker Compose
   command: docker compose up -d --build
   args:
