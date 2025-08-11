@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       app: backend
-  templates:
+  template:
     metadata:
       name: backend
       labels:
