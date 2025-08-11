@@ -5,7 +5,7 @@ metadata:
   labels:
     app: frontend
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - name: "frontend-service"
     port: 3000
