@@ -129,3 +129,101 @@ This guarantees a smooth and fully automated infrastructure setup.
 - ✅ Use of **official Ansible modules** (`apt`, `git`, `command`, `pip`, etc.) for idempotent actions.
 - ✅ Proper use of **variables**, **become**, and **chdir**.
 - ✅ Logical **execution order** matching dependency hierarchy.
+
+
+
+# Fullstack Microservices Deployment on Kubernetes (AWS)
+
+This project deploys a fullstack microservices architecture consisting of:
+
+- **Frontend** — React/Vue/Angular app (or any UI) served via Kubernetes.
+- **Backend** — REST API service (Node.js, Django, etc.).
+- **MongoDB** — Database service with persistent storage on AWS EBS.
+
+All services run on a Kubernetes cluster hosted on AWS EC2 instances. Persistent storage is provisioned dynamically using AWS Elastic Block Store (EBS) via the AWS EBS CSI driver.
+
+---
+
+## Prerequisites
+
+- Kubernetes cluster on AWS (EKS or self-managed with EC2 nodes).
+- AWS EBS CSI driver installed and configured in your cluster.
+- Proper IAM permissions for nodes/CSI driver to create and attach EBS volumes.
+- `kubectl` CLI configured to access your Kubernetes cluster.
+- AWS CLI installed (optional).
+
+
+## How PersistentVolumeClaim (PVC) Works in This Microservice
+
+In this project, the MongoDB microservice requires persistent storage to save its database files so that data remains safe even if the pod restarts or is rescheduled.
+
+### PVC Role in MongoDB Microservice
+
+- The **PersistentVolumeClaim** (`mongo-persistent`) is a Kubernetes object that requests a persistent storage volume.
+- It specifies the required storage size (e.g., 10Gi) and the storage class (`gp2`) which uses AWS Elastic Block Store (EBS) as the underlying storage provider.
+- When the PVC is applied, Kubernetes dynamically provisions an AWS EBS volume that matches the claim.
+- This EBS volume is then **bound** to the PVC, making it available to the MongoDB pod.
+
+### How MongoDB Uses the PVC
+
+- The MongoDB pod mounts the PVC as a volume at `/data/db` inside the container.
+- All MongoDB data files are stored on this mounted volume.
+- Because the volume is backed by AWS EBS and managed by Kubernetes, the data persists independently of the pod lifecycle.
+- If the MongoDB pod restarts or moves to another node, Kubernetes re-attaches the same EBS volume to the new pod, preserving the data.
+
+### Important Details
+
+- The PVC uses `VolumeBindingMode: WaitForFirstConsumer`, which means:
+  - The AWS EBS volume is created only when the MongoDB pod is scheduled.
+  - This ensures the volume is provisioned in the same availability zone as the node hosting the pod.
+- The access mode is `ReadWriteOnce`, which allows the volume to be mounted as read-write by the single MongoDB pod, ensuring data integrity.
+
+### Summary
+
+The PVC abstracts the complex process of provisioning, attaching, and mounting an AWS EBS volume to your MongoDB pod. It enables your microservice to have durable, reliable storage without manual intervention, ensuring your database data is safe and persistent even when pods restart or reschedule.
+
+## Accessing the Frontend via LoadBalancer
+
+### What is a LoadBalancer Service?
+
+A **LoadBalancer** type Kubernetes Service provisions an external load balancer (e.g., AWS ELB) that routes traffic from outside the cluster to your frontend pods. This makes your frontend accessible publicly over the internet.
+
+### Steps to Access Frontend
+
+1. **Expose the Frontend Deployment as a LoadBalancer Service**
+
+   Your frontend service manifest should specify:
+
+   ```yaml
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: frontend
+   spec:
+     type: LoadBalancer
+     selector:
+       app: frontend
+     ports:
+       - protocol: TCP
+         port: 80           
+         targetPort: 3000  
+
+
+# Accessing the Frontend
+
+The frontend is exposed via a Kubernetes LoadBalancer service, which provides an external URL to access the app.
+
+### To get the frontend URL:
+
+Run:
+
+```bash
+kubectl get service frontend
+
+NAME       TYPE           CLUSTER-IP      EXTERNAL-IP                        PORT(S)        AGE
+frontend   LoadBalancer   10.0.0.1        a12b34c56d.elb.amazonaws.com       80:31537/TCP   10m
+
+Use the EXTERNAL-IP or hostname (a12b34c56d.elb.amazonaws.com in this example) to open the frontend in your browser:
+
+http://a12b34c56d.elb.amazonaws.com:3000
+
