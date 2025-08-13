@@ -225,5 +225,5 @@ frontend   LoadBalancer   10.0.0.1        a12b34c56d.elb.amazonaws.com       80:
 
 Use the EXTERNAL-IP or hostname (a12b34c56d.elb.amazonaws.com in this example) to open the frontend in your browser:
 
-http://a12b34c56d.elb.amazonaws.com:3000
+http://44.200.145.252:3000
 
